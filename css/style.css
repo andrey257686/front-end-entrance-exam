@@ -11,15 +11,6 @@
   --accent-text-color: #ffffff;
   --background-color-badge: #7e731266;
   --text-badge: #ddf163;
-
-  /* color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; */
 }
 
 * {
@@ -41,6 +32,46 @@ li {
 body {
   color: var(--main-text);
 }
+
+/* text styles */
+
+.small-text-semibold {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.ordinary-text {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.ordinary-text-semibold {
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.enlarged-text {
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.enlarged-text-semibold {
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.larged-text-bold {
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* main styles */
 
 .container {
   width: 80%;
@@ -68,16 +99,10 @@ body {
   align-items: stretch;
   justify-content: space-between;
   gap: 20px;
-  /* border: 1px solid red; */
-  /* min-height: 150px; */
 }
 
 .resume__part_top {
-  height: 25vh;
-}
-
-.resume__part > * {
-  flex-grow: 1;
+  min-height: 25vh;
 }
 
 .resume__block {
@@ -95,11 +120,11 @@ body {
 /* photo block */
 
 .resume__block_photo {
+  flex-basis: 25%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-basis: 30%;
   padding: 0;
   background-color: none;
   border-radius: 12px;
@@ -116,17 +141,12 @@ body {
 /* name block */
 
 .resume__block_name {
+  flex-basis: 25%;
   display: flex;
   flex-direction: column;
   align-items: start;
   justify-content: space-between;
   gap: 10px;
-  flex-basis: 30%;
-}
-
-.resume__block_name > p {
-  font-size: 1.5rem;
-  font-weight: 500;
 }
 
 .name-info {
@@ -138,26 +158,19 @@ body {
   line-height: 1;
 }
 
-.name-info > h2 {
-  font-size: 1.75rem;
-  font-weight: 600;
-}
-
 .name-info > p {
-  font-size: 1.5rem;
-  font-weight: 500;
   color: var(--additional-text);
 }
 
 /* languages block */
 
 .resume__block_languages {
+  flex-basis: 50%;
   display: flex;
   flex-direction: column;
   align-items: start;
   justify-content: space-between;
   gap: 10px;
-  flex-basis: 40%;
 }
 
 .languages-info {
@@ -187,14 +200,11 @@ body {
 }
 
 .languages-info__item_text {
-  font-size: 1rem;
-  font-weight: 500;
-  line-height: 1;
   width: 6.5rem;
 }
 
 .languages-info__item_progress-bar {
-  height: 1rem;
+  height: 1.5rem;
   border-radius: 3px;
   overflow: hidden;
   flex-grow: 1;
@@ -248,7 +258,6 @@ body {
 }
 
 .experience-info__item_badge {
-  font-weight: 500;
   padding: 2px 6px;
   border-radius: 60px;
   color: var(--text-badge);
@@ -261,8 +270,6 @@ body {
   flex-direction: row;
   align-items: start;
   justify-content: space-between;
-  font-size: 1rem;
-  font-weight: 500;
 }
 
 .experience-info__item_main-block {
@@ -281,16 +288,6 @@ body {
   justify-content: space-between;
   gap: 6px;
   flex-basis: 30%;
-}
-
-.experience-info__item_position > h3 {
-  font-size: 1.25rem;
-  font-weight: 500;
-}
-
-.experience-info__item_position > p {
-  font-size: 1rem;
-  font-weight: 400;
 }
 
 .experience-info__item_description {
@@ -346,14 +343,11 @@ body {
   position: absolute;
   top: 0;
   transform: translateY(-50%);
-  font-size: 1rem;
-  font-weight: 500;
   padding: 4px 8px;
   background-color: var(--main-text);
   color: var(--accent-text-color);
   border-radius: 20px;
   align-self: center;
-  font-weight: 500;
 }
 
 .tools-info__item_description {
@@ -373,6 +367,7 @@ body {
 /* education block */
 
 .resume__block_education {
+  flex-basis: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -414,17 +409,10 @@ body {
   flex-direction: row;
   align-items: start;
   justify-content: space-between;
-  font-size: 1rem;
-  font-weight: 500;
 }
 
 .education-info__item_main {
   width: 100%;
-}
-
-.education-info__item_main > h3 {
-  font-size: 1.25rem;
-  font-weight: 500;
 }
 
 .education-info__item_tags {
@@ -434,8 +422,6 @@ body {
   align-items: start;
   justify-content: start;
   flex-wrap: wrap;
-  font-size: 1rem;
-  font-weight: 400;
   gap: 4px;
 }
 
@@ -444,14 +430,10 @@ body {
   margin-right: 2px;
 }
 
-.education-info__item_text {
-  font-size: 1rem;
-  font-weight: 400;
-}
-
 /* sensitive-info block */
 
 .sensitive-info {
+  flex-basis: 50%;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -512,11 +494,6 @@ body {
   flex-direction: row;
   align-items: center;
   gap: 8px;
-}
-
-.contacts-info__item > p {
-  font-size: 1rem;
-  font-weight: 600;
 }
 
 .contacts-info__item > p::after {
