@@ -81,6 +81,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 20px;
+  padding: 20px 0px;
 }
 
 .resume {
@@ -103,6 +104,14 @@ body {
 
 .resume__part_top {
   min-height: 25vh;
+}
+
+.resume__part_center {
+  height: 50vh;
+}
+
+.resume__part_bottom {
+  min-height: 50vh;
 }
 
 .resume__block {
@@ -225,6 +234,9 @@ body {
   align-items: center;
   gap: 16px;
   flex-basis: 80%;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-color) var(--background);
 }
 
 .resume__block_experience > h2 {
@@ -317,6 +329,9 @@ body {
   flex-direction: column;
   align-items: start;
   flex-basis: 30%;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-color) var(--background);
 }
 
 .tools-info {
@@ -381,21 +396,21 @@ body {
 .education-info {
   width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap;
+  /* justify-content: space-between; */
   gap: 10px;
 }
 
 .education-info__item {
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: start;
-  justify-content: space-between;
   gap: 10px;
   background-color: var(--background-block);
   padding: 8px;
   border-radius: 10px;
+  flex: 1 1 calc(50% - 5px);
+  max-width: calc(50% - 5px);
 }
 
 .education-info__item_favorite {
@@ -448,6 +463,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 16px;
+  flex-grow: 1;
 }
 
 .resume__block_interests > h2 {
