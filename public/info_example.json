@@ -1,0 +1,66 @@
+{
+  "name": "Karthik SR",
+  "title": "UX/UI Designer",
+  "languages": [
+    { "name": "English", "level": "Advanced" },
+    { "name": "Malayalam", "level": "Advanced" },
+    { "name": "Hindi", "level": "Intermediate" }
+  ],
+  "experience": [
+    {
+      "title": "UX/UI Designer",
+      "company": "Tata Consultancy Services",
+      "period": "Jun. 2023 - Present",
+      "most_recent": true,
+      "description": [
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      ]
+    },
+    {
+      "title": "Graphic / Web designer",
+      "company": "Freelance",
+      "period": "2017 - Present",
+      "description": [
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      ]
+    },
+    {
+      "title": "Legal Assistant",
+      "company": "Law Firm | Intern",
+      "period": "Sep. 2021 - Jun. 2023",
+      "description": [
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "year": "2023",
+      "degree": "UI/UX",
+      "description": "#design #branding #photography #UI #UX",
+      "institution": "Coursera"
+    },
+    {
+      "year": "2023",
+      "degree": "UI/UX",
+      "description": "#design #branding #photography #UI #UX",
+      "institution": "Coursera"
+    },
+    {
+      "year": "2023",
+      "degree": "UI/UX",
+      "description": "#design #branding #photography #UI #UX",
+      "institution": "Coursera"
+    }
+  ],
+  "tools": ["Figma", "Photoshop", "Illustrator", "Premiere", "Notion", "WordPress", "Artificial Intelligence"],
+  "interests": ["branding", "design", "photography", "illustration", "typography", "research"],
+  "contact": {
+    "message": "Let’s chat! I’m ready to work on exciting projects",
+    "phone": "+91 9876543210",
+    "email": "9k5f2p@example.com"
+  }
+}
