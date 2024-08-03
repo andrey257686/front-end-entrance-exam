@@ -465,10 +465,10 @@ body {
   gap: 4px;
 }
 
-.education-info__item_tag::before {
+/* .education-info__item_tag::before {
   content: '#';
   margin-right: 2px;
-}
+} */
 
 /* sensitive-info block */
 

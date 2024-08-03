@@ -4,6 +4,7 @@ import favoriteIcon from '/favorite.svg';
 import myPhoto from '/my-photo.jpg';
 
 let CURRENT_RESUME = null;
+let isEditMode = false;
 
 if (!localStorage.getItem('resume')) {
   fetchAndRenderResume();
@@ -41,25 +42,45 @@ function renderResume(data) {
   setupListeners();
 }
 
+function setupListenerForEditable(element) {
+  element.addEventListener('click', () => {
+    element.focus();
+  });
+
+  element.addEventListener('blur', () => {
+    const newText = element.innerText;
+    updateResume(element, newText);
+  });
+
+  element.addEventListener('keydown', event => {
+    if (event.key === 'Enter') {
+      element.blur();
+    }
+  });
+}
+
 function setupListeners() {
   document.querySelectorAll('.editable').forEach(element => {
+    setupListenerForEditable(element);
     element.contentEditable = false;
-    element.addEventListener('click', () => {
-      element.focus();
-    });
-
-    element.addEventListener('blur', () => {
-      const newText = element.innerText;
-      updateResume(element, newText);
-    });
-
-    element.addEventListener('keydown', event => {
-      if (event.key === 'Enter') {
-        element.blur();
-      }
-    });
   });
   document.getElementById('edit').addEventListener('click', () => {
+    isEditMode = !isEditMode;
+    // if (isEditMode) {
+    //   document.querySelectorAll('#add-item').forEach(element => {
+    //     element.style.display = 'block';
+    //   });
+    //   document.querySelectorAll('#delete-item').forEach(element => {
+    //     element.style.display = 'block';
+    //   });
+    // } else {
+    //   document.querySelectorAll('#add-item').forEach(element => {
+    //     element.style.display = 'none';
+    //   });
+    //   document.querySelectorAll('#delete-item').forEach(element => {
+    //     element.style.display = 'none';
+    //   });
+    // }
     document.querySelectorAll('.editable').forEach(element => {
       if (element.contentEditable === 'false') {
         element.contentEditable = true;
@@ -67,8 +88,105 @@ function setupListeners() {
         element.contentEditable = false;
       }
     });
+    document.querySelectorAll('.resizable').forEach(element => {
+      const parent = element.parentElement;
+      const parentWidth = parent.offsetWidth;
+      const maxWidth = parentWidth;
+      element.addEventListener('mousedown', e => {
+        const startX = e.clientX;
+        const startWidth = element.offsetWidth;
+
+        const resize = e => {
+          const newWidth = startWidth + (e.clientX - startX);
+
+          if (newWidth > maxWidth) {
+            element.style.width = `${maxWidth}px`;
+          } else {
+            element.style.width = `${newWidth}px`;
+          }
+        };
+
+        const endResize = () => {
+          const { level, levelValue } = detectLanguageLevelByValue((element.offsetWidth / parentWidth) * 100);
+          element.style.width = `${levelValue}%`;
+          updateResume(element, level);
+          document.removeEventListener('mouseup', endResize);
+          document.removeEventListener('mousemove', resize);
+        };
+
+        document.addEventListener('mousemove', resize);
+
+        document.addEventListener('mouseup', endResize);
+      });
+    });
   });
+
+  // document.querySelectorAll('#add-item').forEach(element => {
+  //   element.addEventListener('click', event => {
+  //     const element = event.target;
+  //     const parent = element.parentElement;
+  //     if (parent.dataset.abbr) {
+  //       if (parent.dataset.abbr === 'experience-info-description') {
+  //         addExperienceDescriptionItem(parent);
+  //       }
+  //     }
+  //   });
+  // });
 }
+
+function detectLanguageLevelByValue(value) {
+  if (value >= 0 && value <= 10) {
+    return {
+      level: 'Beginner',
+      levelValue: 10,
+    };
+  }
+  if (value > 10 && value <= 20) {
+    return {
+      level: 'Elementary',
+      levelValue: 20,
+    };
+  }
+  if (value > 20 && value <= 40) {
+    return {
+      level: 'Pre-Intermediate',
+      levelValue: 40,
+    };
+  }
+  if (value > 40 && value <= 60) {
+    return {
+      level: 'Intermediate',
+      levelValue: 60,
+    };
+  }
+  if (value > 60 && value <= 80) {
+    return {
+      level: 'Upper Intermediate',
+      levelValue: 80,
+    };
+  }
+  if (value > 80 && value <= 100) {
+    return {
+      level: 'Advanced',
+      levelValue: 100,
+    };
+  }
+}
+
+// function addExperienceDescriptionItem(parent) {
+//   const listContainer = parent.querySelector('ul');
+//   const newItem = document.createElement('li');
+//   newItem.className = 'experience-info__item_description-item ordinary-text editable';
+//   newItem.innerText = 'Write here';
+//   CURRENT_RESUME.experience[parent.dataset.index].description.push(newItem.innerText);
+//   newItem.id = `experience_${parent.dataset.index}_description_${CURRENT_RESUME.experience[parent.dataset.index].description.length - 1}`;
+//   setupListenerForEditable(newItem);
+//   if (isEditMode) {
+//     newItem.contentEditable = true;
+//     newItem.focus();
+//   }
+//   listContainer.appendChild(newItem);
+// }
 
 function updateResume(element, newText) {
   const elementId = element.id;
@@ -118,7 +236,7 @@ function renderBlockName(resumePart, data) {
   blockName.id = 'block_name';
   blockName.className = 'resume__block resume__block_name';
   blockName.innerHTML = `
-    <p class="enlarged-text-semibold">Hello 👋🏻 I’m</p>
+    <p class="enlarged-text-semibold editable" id="greeting">${data.greeting}</p>
     <div class="name-info" id="name_info">
       <h2 class="larged-text-bold editable" id="name">${data.name}</h2>
       <p class="enlarged-text-semibold editable" id="title">${data.title}</p>
@@ -136,11 +254,11 @@ function renderBlockLanguages(resumePart, data) {
       <ul class="languages-info__list">
         ${data.languages
           .map(
-            language => `<li class="languages-info__item">
+            (language, index) => `<li class="languages-info__item">
           <div class="languages-info__item_block">
-            <p class="languages-info__item_text ordinary-text-semibold">${language.name}</p>
+            <p class="languages-info__item_text ordinary-text-semibold editable" id="languages_${index}_name">${language.name}</p>
             <div class="languages-info__item_progress-bar">
-              <div class="languages-info__item_progress" style="width: ${detectLanguageLevel(language.level)}%"></div>
+              <div class="languages-info__item_progress resizable" id="languages_${index}_level" style="width: ${detectLanguageLevelByString(language.level)}%"></div>
             </div>
           </div>
         </li>`
@@ -150,7 +268,7 @@ function renderBlockLanguages(resumePart, data) {
     </div>`;
   resumePart.appendChild(blockLanguages);
 
-  function detectLanguageLevel(level) {
+  function detectLanguageLevelByString(level) {
     if (level === 'Advanced') return 100;
     if (level === 'Upper Intermediate') return 80;
     if (level === 'Intermediate') return 60;
@@ -204,16 +322,8 @@ function renderBlockExperience(resumePart, data) {
             <h3 class="experience-info__item_text-name enlarged-text-semibold editable" id="experience_${index}_title">${experience.title}</h3>
             <p class="ordinary-text editable" id="experience_${index}_company">${experience.company}</p>
           </div>
-          <div class="experience-info__item_description">
-            <ul class="experience-info__item_description-list">
-              ${experience.description
-                .map(
-                  description => `<li class="experience-info__item_description-item ordinary-text">
-                  ${description}
-                </li>`
-                )
-                .join('')}
-            </ul>
+          <div class="experience-info__item_description" data-abbr="experience-info-description" data-index="${index}">
+            <p class="ordinary-text editable" id="experience_${index}_description">${experience.description}</p>
           </div>
         </div>
       </div>`
@@ -241,7 +351,7 @@ function renderBlockEducation(resumePart, data) {
         <div class="education-info__item_main">
           <h3 class="enlarged-text-semibold editable" id="education_${index}_degree">${education.degree}</h3>
           <div class="education-info__item_tags">
-            ${education.tags.map(tag => `<p class="education-info__item_tag ordinary-text">${tag}</p>`).join('')}
+            <p class="education-info__item_tag ordinary-text editable" id="education_${index}_tags">${education.tags}</p>
           </div>
         </div>
         <p class="ordinary-text editable" id="education_${index}_institution">${education.institution}</p>
@@ -261,7 +371,7 @@ function renderBlockInterests(resumePart, data) {
   <ul class="interests-info">
     ${data.interests
       .map(
-        interest => `<li class="interests-info__item ordinary-text">
+        (interest, index) => `<li class="interests-info__item ordinary-text editable" id="interests_${index}">
       ${interest}
     </li>`
       )
