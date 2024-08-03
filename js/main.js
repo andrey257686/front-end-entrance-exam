@@ -3,14 +3,27 @@ import '../css/normalize.css';
 import favoriteIcon from '/favorite.svg';
 import myPhoto from '/my-photo.jpg';
 
-fetch('/info_my.json')
-  .then(response => response.json())
-  .then(data => {
-    renderResume(data);
-  })
-  .catch(error => {
-    console.error('Ошибка загрузки файла:', error);
-  });
+let CURRENT_RESUME = null;
+
+if (!localStorage.getItem('resume')) {
+  fetchAndRenderResume();
+} else {
+  CURRENT_RESUME = JSON.parse(localStorage.getItem('resume'));
+  renderResume(CURRENT_RESUME);
+}
+
+function fetchAndRenderResume() {
+  fetch('/info_my.json')
+    .then(response => response.json())
+    .then(data => {
+      CURRENT_RESUME = data;
+      renderResume(data);
+      localStorage.setItem('resume', JSON.stringify(data));
+    })
+    .catch(error => {
+      console.error('Ошибка загрузки файла:', error);
+    });
+}
 
 function renderResume(data) {
   const resumePartTop = document.getElementById('part_top');
@@ -22,9 +35,72 @@ function renderResume(data) {
   renderBlockLanguages(resumePartTop, data);
   renderBlockExperience(resumePartCenter, data);
   renderBlockTools(resumePartCenter, data);
-  renderBlockEducation(resumePartBottom, data);
+  renderBlockEducation(resumePartBottom, data); // ИСПРАВИТЬ ПОЗЖЕ ТАМ prepend, подумать над sensitive info
   renderBlockInterests(sensitiveInfo, data);
   renderBlockContacts(sensitiveInfo, data);
+  setupListeners();
+}
+
+function setupListeners() {
+  document.querySelectorAll('.editable').forEach(element => {
+    element.contentEditable = false;
+    element.addEventListener('click', () => {
+      element.focus();
+    });
+
+    element.addEventListener('blur', () => {
+      const newText = element.innerText;
+      updateResume(element, newText);
+    });
+
+    element.addEventListener('keydown', event => {
+      if (event.key === 'Enter') {
+        element.blur();
+      }
+    });
+  });
+  document.getElementById('edit').addEventListener('click', () => {
+    document.querySelectorAll('.editable').forEach(element => {
+      if (element.contentEditable === 'false') {
+        element.contentEditable = true;
+      } else {
+        element.contentEditable = false;
+      }
+    });
+  });
+}
+
+function updateResume(element, newText) {
+  const elementId = element.id;
+  const elementPath = elementId.split('_');
+  let currentObject = CURRENT_RESUME;
+  for (let i = 0; i < elementPath.length - 1; i++) {
+    currentObject = currentObject[elementPath[i]];
+  }
+  console.log(elementPath);
+  currentObject[elementPath[elementPath.length - 1]] = newText;
+  localStorage.setItem('resume', JSON.stringify(CURRENT_RESUME));
+  if (element.dataset.way) {
+    changeContactLink(element, newText, element.dataset.type);
+  }
+}
+
+function changeContactLink(element, newText, way) {
+  // ИСПРАВИТЬ ТАК КАК ДУБЛИРУЕТСЯ КОД С detectWay
+  switch (way) {
+    case 'email':
+      element.href = `mailto:${newText}`;
+      break;
+    case 'github': {
+      element.href = `${newText}`;
+      break;
+    }
+    case 'telegram':
+      element.href = `tg://resolve?domain=${newText}`;
+      break;
+    default:
+      return '';
+  }
 }
 
 function renderBlockPhoto(resumePart) {
@@ -44,8 +120,8 @@ function renderBlockName(resumePart, data) {
   blockName.innerHTML = `
     <p class="enlarged-text-semibold">Hello 👋🏻 I’m</p>
     <div class="name-info" id="name_info">
-      <h2 class="larged-text-bold">${data.name}</h2>
-      <p class="enlarged-text-semibold">${data.title}</p>
+      <h2 class="larged-text-bold editable" id="name">${data.name}</h2>
+      <p class="enlarged-text-semibold editable" id="title">${data.title}</p>
     </div>`;
   resumePart.appendChild(blockName);
 }
@@ -117,16 +193,16 @@ function renderBlockExperience(resumePart, data) {
   <div class="experience-info">
     ${data.experience
       .map(
-        experience => `
+        (experience, index) => `
       <div class="experience-info__item ${experience.last ? 'experience-info__item_last' : ''}">
         <div class="experience-info__item_top-block">
-          <p class="ordinary-text-semibold">${experience.period}</p>
+          <p class="ordinary-text-semibold editable" id="experience_${index}_period">${experience.period}</p>
           ${experience.last ? '<div class="experience-info__item_badge ordinary-text-semibold">most recent</div>' : ''}
         </div>
         <div class="experience-info__item_main-block">
           <div class="experience-info__item_position">
-            <h3 class="experience-info__item_text-name enlarged-text-semibold">${experience.title}</h3>
-            <p class="ordinary-text">${experience.company}</p>
+            <h3 class="experience-info__item_text-name enlarged-text-semibold editable" id="experience_${index}_title">${experience.title}</h3>
+            <p class="ordinary-text editable" id="experience_${index}_company">${experience.company}</p>
           </div>
           <div class="experience-info__item_description">
             <ul class="experience-info__item_description-list">
@@ -156,24 +232,24 @@ function renderBlockEducation(resumePart, data) {
   <div class="education-info">
     ${data.education
       .map(
-        education => `
+        (education, index) => `
       <div class="education-info__item ${education.isFavorite ? 'education-info__item_favorite' : ''} ">
         <div class="education-info__item_top">
-          <p class="enlarged-text-semibold">${education.period}</p>
+          <p class="enlarged-text-semibold editable" id="education_${index}_period">${education.period}</p>
           ${education.isFavorite ? `<img src="${favoriteIcon}" alt="">` : ''}
         </div>
         <div class="education-info__item_main">
-          <h3 class="education-info__item_text-name enlarged-text-semibold">${education.degree}</h3>
+          <h3 class="enlarged-text-semibold editable" id="education_${index}_degree">${education.degree}</h3>
           <div class="education-info__item_tags">
             ${education.tags.map(tag => `<p class="education-info__item_tag ordinary-text">${tag}</p>`).join('')}
           </div>
         </div>
-        <p class="education-info__item_text ordinary-text">${education.institution}</p>
+        <p class="ordinary-text editable" id="education_${index}_institution">${education.institution}</p>
       </div>`
       )
       .join('')}
   </div>`;
-  resumePart.appendChild(blockEducation);
+  resumePart.prepend(blockEducation);
 }
 
 function renderBlockInterests(resumePart, data) {
@@ -199,33 +275,33 @@ function renderBlockContacts(resumePart, data) {
   blockContacts.id = 'block_contacts';
   blockContacts.className = 'resume__block resume__block_contacts';
   blockContacts.innerHTML = `
-  <h2 class="resume__block_title">${data.contacts.message}</h2>
+  <h2 class="resume__block_title editable" id="contacts_message">${data.contacts.message}</h2>
   <div class="contacts-info">
     ${Object.keys(data.contacts.ways)
       .map(
         way =>
           `<div class="contacts-info__item">
-        <p class="ordinary-text-semibold">${way}</p>
+        <p class="ordinary-text-semibold editable" id="contacts_ways_${way}">${way}</p>
         ${detectWay(way)}
       </div>`
       )
       .join('')}
   </div>`;
   resumePart.appendChild(blockContacts);
+}
 
-  function detectWay(way) {
-    switch (way) {
-      case 'email':
-        return `<a href="mailto:${data.contacts.ways.email}" class="ordinary-text">${data.contacts.ways.email}</a>`;
-      case 'github': {
-        const match = data.contacts.ways.github.match(/github\.com\/([^/]+)/);
-        const login = match[1];
-        return `<a href="${data.contacts.ways.github}" class="ordinary-text">${login}</a>`;
-      }
-      case 'telegram':
-        return `<a href="tg://resolve?domain=${data.contacts.ways.telegram}" class="ordinary-text">${data.contacts.ways.telegram}</a>`;
-      default:
-        return '';
+function detectWay(way) {
+  switch (way) {
+    case 'email':
+      return `<a href="mailto:${CURRENT_RESUME.contacts.ways.email}"class="ordinary-text editable" id="contacts_ways_email" data-way="true" data-type="email">${CURRENT_RESUME.contacts.ways.email}</a>`;
+    case 'github': {
+      // const match = CURRENT_RESUME.contacts.ways.github.match(/github\.com\/([^/]+)/);
+      // const login = match[1];
+      return `<a href="${CURRENT_RESUME.contacts.ways.github}" class="ordinary-text editable" id="contacts_ways_github" data-way="true" data-type="github">${CURRENT_RESUME.contacts.ways.github}</a>`;
     }
+    case 'telegram':
+      return `<a href="tg://resolve?domain=${CURRENT_RESUME.contacts.ways.telegram}" class="ordinary-text editable" id="contacts_ways_telegram" data-way="true" data-type="telegram">${CURRENT_RESUME.contacts.ways.telegram}</a>`;
+    default:
+      return '';
   }
 }

@@ -17,6 +17,11 @@
   box-sizing: border-box;
 }
 
+[contentEditable='true'] {
+  /* pointer-events: none; */
+  border: 1px solid red;
+}
+
 p,
 h2,
 h3,
@@ -72,6 +77,11 @@ body {
 }
 
 /* main styles */
+
+/* .editable {
+  border: 1px dashed red;
+  cursor: pointer;
+} */
 
 .container {
   width: 80%;
