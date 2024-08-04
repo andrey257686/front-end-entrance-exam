@@ -218,8 +218,6 @@ function setupListeners() {
       }
     });
 
-    // ОТРЕФАКТОРИТЬ clickable, ПОТОМУ ЧТО ЭТО УЖАС, НО РАБОТАЕТ!
-
     document.querySelectorAll('.clickable').forEach(element => {
       setupListenerForClickable(element);
     });
@@ -457,7 +455,6 @@ function updateResume(element, newText) {
 }
 
 function changeContactLink(element, newText, way) {
-  // ИСПРАВИТЬ ТАК КАК ДУБЛИРУЕТСЯ КОД С detectWay
   switch (way) {
     case 'email':
       element.href = `mailto:${newText}`;
