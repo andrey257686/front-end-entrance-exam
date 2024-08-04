@@ -43,55 +43,37 @@ function renderResume(data) {
 }
 
 function setupListenerForEditable(element) {
-  element.addEventListener('click', () => {
-    element.focus();
-  });
+  if (element.children.length > 0) {
+    Array.from(element.children).forEach(child => {
+      setupListenerForEditable(child);
+    });
+  } else {
+    if (element.classList.contains('editable')) {
+      element.addEventListener('click', () => {
+        element.focus();
+      });
 
-  element.addEventListener('blur', () => {
-    const newText = element.innerText;
-    updateResume(element, newText);
-  });
+      element.addEventListener('blur', () => {
+        const newText = element.innerText;
+        updateResume(element, newText);
+      });
 
-  element.addEventListener('keydown', event => {
-    if (event.key === 'Enter') {
-      element.blur();
+      element.addEventListener('keydown', event => {
+        if (event.key === 'Enter') {
+          element.blur();
+        }
+      });
     }
-  });
+  }
 }
 
-function setupListeners() {
-  document.querySelectorAll('.editable').forEach(element => {
-    setupListenerForEditable(element);
-    element.contentEditable = false;
-  });
-  document.getElementById('edit').addEventListener('click', () => {
-    isEditMode = !isEditMode;
-    // if (isEditMode) {
-    //   document.querySelectorAll('#add-item').forEach(element => {
-    //     element.style.display = 'block';
-    //   });
-    //   document.querySelectorAll('#delete-item').forEach(element => {
-    //     element.style.display = 'block';
-    //   });
-    // } else {
-    //   document.querySelectorAll('#add-item').forEach(element => {
-    //     element.style.display = 'none';
-    //   });
-    //   document.querySelectorAll('#delete-item').forEach(element => {
-    //     element.style.display = 'none';
-    //   });
-    // }
-    document.querySelectorAll('.editable').forEach(element => {
-      if (element.contentEditable === 'false') {
-        element.contentEditable = true;
-      } else {
-        element.contentEditable = false;
-      }
+function setupListenerForClickable(element) {
+  if (element.children.length > 0) {
+    Array.from(element.children).forEach(child => {
+      setupListenerForClickable(child);
     });
-
-    // ОТРЕФАКТОРИТЬ clickable, ПОТОМУ ЧТО ЭТО УЖАС, НО РАБОТАЕТ!
-
-    document.querySelectorAll('.clickable').forEach(element => {
+  } else {
+    if (element.classList.contains('clickable')) {
       const currentStatus = element.dataset.status;
       if (currentStatus === 'false') {
         if (isEditMode) {
@@ -129,9 +111,17 @@ function setupListeners() {
         }
         updateResume(element, element.dataset.status);
       });
-    });
+    }
+  }
+}
 
-    document.querySelectorAll('.resizable').forEach(element => {
+function setupListenerForResizable(element) {
+  if (element.children.length > 0) {
+    Array.from(element.children).forEach(child => {
+      setupListenerForResizable(child);
+    });
+  } else {
+    if (element.classList.contains('resizable')) {
       const parent = element.parentElement;
       const parentWidth = parent.offsetWidth;
       const maxWidth = parentWidth;
@@ -161,20 +151,240 @@ function setupListeners() {
 
         document.addEventListener('mouseup', endResize);
       });
+    }
+  }
+}
+
+function setupListenerForDeleteButton(element) {
+  element.addEventListener('click', event => {
+    const element = event.target;
+    const parent = element.parentElement;
+    if (parent.dataset.abbr) {
+      switch (parent.dataset.abbr) {
+        case 'education-info__item':
+          deleteEducationDescriptionItem(parent);
+          break;
+        case 'experience-info__item':
+          deleteExperienceDescriptionItem(parent);
+          break;
+        case 'languages-info__item':
+          deleteLanguageDescriptionItem(parent);
+          break;
+        default:
+          break;
+      }
+    }
+  });
+}
+
+function setupListeners() {
+  document.querySelectorAll('.editable').forEach(element => {
+    setupListenerForEditable(element);
+    element.contentEditable = false;
+  });
+  document.getElementById('edit').addEventListener('click', () => {
+    isEditMode = !isEditMode;
+    if (isEditMode) {
+      document.querySelectorAll('.add-item').forEach(element => {
+        element.style.display = 'block';
+      });
+      document.querySelectorAll('.delete-item').forEach(element => {
+        element.style.display = 'block';
+      });
+    } else {
+      document.querySelectorAll('.add-item').forEach(element => {
+        element.style.display = 'none';
+      });
+      document.querySelectorAll('.delete-item').forEach(element => {
+        element.style.display = 'none';
+      });
+    }
+    document.querySelectorAll('.editable').forEach(element => {
+      if (element.contentEditable === 'false') {
+        element.contentEditable = true;
+      } else {
+        element.contentEditable = false;
+      }
+    });
+
+    // ОТРЕФАКТОРИТЬ clickable, ПОТОМУ ЧТО ЭТО УЖАС, НО РАБОТАЕТ!
+
+    document.querySelectorAll('.clickable').forEach(element => {
+      setupListenerForClickable(element);
+    });
+
+    document.querySelectorAll('.resizable').forEach(element => {
+      setupListenerForResizable(element);
     });
   });
 
-  // document.querySelectorAll('#add-item').forEach(element => {
-  //   element.addEventListener('click', event => {
-  //     const element = event.target;
-  //     const parent = element.parentElement;
-  //     if (parent.dataset.abbr) {
-  //       if (parent.dataset.abbr === 'experience-info-description') {
-  //         addExperienceDescriptionItem(parent);
-  //       }
-  //     }
-  //   });
-  // });
+  document.querySelectorAll('.add-item').forEach(element => {
+    element.addEventListener('click', event => {
+      const element = event.target;
+      const parent = element.parentElement;
+      if (parent.dataset.abbr) {
+        switch (parent.dataset.abbr) {
+          case 'interests-info':
+            addInterestDescriptionItem(parent);
+            break;
+          case 'education-info':
+            addEducationDescriptionItem(parent);
+            break;
+          case 'experience-info':
+            addExperienceDescriptionItem(parent);
+            break;
+          case 'languages-info__list':
+            addLanguageDescriptionItem(parent);
+            break;
+          default:
+            break;
+        }
+      }
+    });
+  });
+
+  document.querySelectorAll('.delete-item').forEach(element => {
+    setupListenerForDeleteButton(element);
+  });
+}
+
+function addInterestDescriptionItem(parent) {
+  const newItem = document.createElement('div');
+  newItem.className = 'interests-info__item ordinary-text editable';
+  newItem.innerText = 'Write here';
+  CURRENT_RESUME.interests.push(newItem.innerText);
+  newItem.id = `interests_${parent.children.length - 1}`;
+  newItem.contentEditable = true;
+  parent.insertBefore(newItem, parent.lastElementChild);
+  setupListenerForEditable(newItem);
+}
+
+function addEducationDescriptionItem(parent) {
+  const index = parent.children.length - 1;
+  const newItem = document.createElement('div');
+  newItem.className = 'education-info__item';
+  newItem.dataset.abbr = 'education-info__item';
+  newItem.dataset.index = index;
+  newItem.innerHTML = `
+    <div class="education-info__item_top">
+      <p class="enlarged-text-semibold editable" id="education_${index}_period" contentEditable=true>Write period</p>
+      <img src="${favoriteIcon}" alt="" class="favorite-icon clickable" id="education_${index}_isFavorite" data-type="education_favorite" data-status="false" style="${isEditMode ? '' : 'display: none'}">
+    </div>
+    <div class="education-info__item_main">
+      <h3 class="enlarged-text-semibold editable" id="education_${index}_degree" contentEditable=true>Write degree</h3>
+      <div class="education-info__item_tags">
+        <p class="education-info__item_tag ordinary-text editable" id="education_${index}_tags" contentEditable=true>Write tags</p>
+      </div>
+    </div>
+    <p class="ordinary-text editable" id="education_${index}_institution" contentEditable=true>Write institution</p>
+    <button class="education_-info__button delete-item" id="education__deleteButton" style="${isEditMode ? '' : 'display: none'}">x</button>
+  `;
+  CURRENT_RESUME.education.push({
+    period: newItem.querySelector('#education_' + index + '_period').innerText,
+    degree: newItem.querySelector('#education_' + index + '_degree').innerText,
+    institution: newItem.querySelector('#education_' + index + '_institution').innerText,
+    tags: newItem.querySelector('#education_' + index + '_tags').innerText,
+    isFavorite: 'false',
+  });
+  parent.insertBefore(newItem, parent.lastElementChild);
+  setupListenerForEditable(newItem);
+  setupListenerForClickable(newItem);
+  setupListenerForDeleteButton(newItem.querySelector('#education__deleteButton'));
+}
+
+function addExperienceDescriptionItem(parent) {
+  const index = parent.children.length - 1;
+  const newItem = document.createElement('div');
+  newItem.className = 'experience-info__item';
+  newItem.dataset.abbr = 'experience-info__item';
+  newItem.dataset.index = index;
+  newItem.innerHTML = `
+  <div class="experience-info__item_top-block">
+    <p class="ordinary-text-semibold editable" id="experience_${index}_period" contentEditable=true>Write period</p>
+    <div class="experience-info__item_badge ordinary-text-semibold clickable" id="experience_${index}_isLast" data-type="experience_badge" data-status="false" style="${isEditMode ? '' : 'display: none'}">most recent</div>
+  </div>
+  <div class="experience-info__item_main-block">
+    <div class="experience-info__item_position">
+      <h3 class="experience-info__item_text-name enlarged-text-semibold editable" id="experience_${index}_title" contentEditable=true>Write title</h3>
+      <p class="ordinary-text editable" id="experience_${index}_company" contentEditable=true>Write company</p>
+    </div>
+    <div class="experience-info__item_description" data-abbr="experience-info-description" data-index="${index}">
+      <p class="ordinary-text editable" id="experience_${index}_description" contentEditable=true>Write description</p>
+    </div>
+  </div>
+  <button class="experience-info__button delete-item" id="experience_deleteButton" style="${isEditMode ? '' : 'display: none'}">x</button>`;
+  CURRENT_RESUME.experience.push({
+    period: newItem.querySelector('#experience_' + index + '_period').innerText,
+    title: newItem.querySelector('#experience_' + index + '_title').innerText,
+    company: newItem.querySelector('#experience_' + index + '_company').innerText,
+    description: newItem.querySelector('#experience_' + index + '_description').innerText,
+    isLast: 'false',
+  });
+  parent.insertBefore(newItem, parent.lastElementChild);
+  setupListenerForEditable(newItem);
+  setupListenerForClickable(newItem);
+  setupListenerForDeleteButton(newItem.querySelector('#experience_deleteButton'));
+}
+
+function addLanguageDescriptionItem(parent) {
+  const index = parent.children.length - 1;
+  const newItem = document.createElement('div');
+  newItem.className = 'languages-info__item';
+  newItem.dataset.abbr = 'languages-info__item';
+  newItem.dataset.index = index;
+  newItem.innerHTML = `
+       <div class="languages-info__item_block">
+        <p class="languages-info__item_text ordinary-text-semibold editable" id="languages_${index}_name" contentEditable=true>Language</p>
+        <div class="languages-info__item_progress-bar">
+          <div class="languages-info__item_progress resizable" id="languages_${index}_level" style="width: 10%"></div>
+        </div>
+      </div>
+      <button class="languages-info__button delete-item" id="languages_deleteButton" style="${isEditMode ? '' : 'display: none'}">x</button>
+  `;
+  CURRENT_RESUME.languages.push({
+    name: newItem.querySelector('#languages_' + index + '_name').innerText,
+    level: 'Beginner',
+  });
+  parent.insertBefore(newItem, parent.lastElementChild);
+  setupListenerForEditable(newItem);
+  setupListenerForResizable(newItem);
+  setupListenerForDeleteButton(newItem.querySelector('#languages_deleteButton'));
+}
+
+function deleteLanguageDescriptionItem(element) {
+  let removableIndex = null;
+  CURRENT_RESUME.languages.find((item, index) =>
+    item.name === element.querySelector(`#languages_${element.dataset.index}_name`).innerText
+      ? (removableIndex = index)
+      : null
+  );
+  CURRENT_RESUME.languages.splice(removableIndex, 1);
+  element.remove();
+  localStorage.setItem('resume', JSON.stringify(CURRENT_RESUME));
+}
+
+function deleteExperienceDescriptionItem(element) {
+  let removableIndex = null;
+  CURRENT_RESUME.experience.find((item, index) =>
+    item.title === element.querySelector(`#experience_${element.dataset.index}_title`).innerText
+      ? (removableIndex = index)
+      : null
+  );
+  CURRENT_RESUME.experience.splice(removableIndex, 1);
+  element.remove();
+  localStorage.setItem('resume', JSON.stringify(CURRENT_RESUME));
+}
+
+function deleteEducationDescriptionItem(element) {
+  let removableIndex = null;
+  CURRENT_RESUME.education.find((item, index) =>
+    item.tags === element.querySelector(`#education_${element.dataset.index}_tags`).innerText
+      ? (removableIndex = index)
+      : null
+  );
+  CURRENT_RESUME.education.splice(removableIndex, 1);
+  element.remove();
+  localStorage.setItem('resume', JSON.stringify(CURRENT_RESUME));
 }
 
 function detectLanguageLevelByValue(value) {
@@ -216,21 +426,6 @@ function detectLanguageLevelByValue(value) {
   }
 }
 
-// function addExperienceDescriptionItem(parent) {
-//   const listContainer = parent.querySelector('ul');
-//   const newItem = document.createElement('li');
-//   newItem.className = 'experience-info__item_description-item ordinary-text editable';
-//   newItem.innerText = 'Write here';
-//   CURRENT_RESUME.experience[parent.dataset.index].description.push(newItem.innerText);
-//   newItem.id = `experience_${parent.dataset.index}_description_${CURRENT_RESUME.experience[parent.dataset.index].description.length - 1}`;
-//   setupListenerForEditable(newItem);
-//   if (isEditMode) {
-//     newItem.contentEditable = true;
-//     newItem.focus();
-//   }
-//   listContainer.appendChild(newItem);
-// }
-
 function updateResume(element, newText) {
   const elementId = element.id;
   const elementPath = elementId.split('_');
@@ -238,7 +433,6 @@ function updateResume(element, newText) {
   for (let i = 0; i < elementPath.length - 1; i++) {
     currentObject = currentObject[elementPath[i]];
   }
-  console.log(elementPath);
   currentObject[elementPath[elementPath.length - 1]] = newText;
   localStorage.setItem('resume', JSON.stringify(CURRENT_RESUME));
   if (element.dataset.way) {
@@ -294,20 +488,23 @@ function renderBlockLanguages(resumePart, data) {
   blockLanguages.innerHTML = `
     <h2 class="resume__block_title">Languages</h2>
     <div class="languages-info" id="languages_info">
-      <ul class="languages-info__list">
+      <div class="languages-info__list" data-abbr="languages-info__list">
         ${data.languages
           .map(
-            (language, index) => `<li class="languages-info__item">
-          <div class="languages-info__item_block">
-            <p class="languages-info__item_text ordinary-text-semibold editable" id="languages_${index}_name">${language.name}</p>
-            <div class="languages-info__item_progress-bar">
-              <div class="languages-info__item_progress resizable" id="languages_${index}_level" style="width: ${detectLanguageLevelByString(language.level)}%"></div>
+            (language, index) => `
+          <div class="languages-info__item" data-abbr="languages-info__item" data-index="${index}">
+            <div class="languages-info__item_block">
+              <p class="languages-info__item_text ordinary-text-semibold editable" id="languages_${index}_name">${language.name}</p>
+              <div class="languages-info__item_progress-bar">
+                <div class="languages-info__item_progress resizable" id="languages_${index}_level" style="width: ${detectLanguageLevelByString(language.level)}%"></div>
+              </div>
             </div>
-          </div>
-        </li>`
+            <button class="languages-info__button delete-item" id="languages_deleteButton" style="display: none">x</button>
+          </div>`
           )
           .join('')}
-      </ul>
+        <button class="languages-info__button add-item" id="languages_addButton" style="display: none">+</button>
+      </div>
     </div>`;
   resumePart.appendChild(blockLanguages);
 
@@ -351,11 +548,11 @@ function renderBlockExperience(resumePart, data) {
   blockExperience.className = 'resume__block resume__block_experience';
   blockExperience.innerHTML = `
   <h2 class="resume__block_title">Experience</h2>
-  <div class="experience-info">
+  <div class="experience-info" data-abbr="experience-info">
     ${data.experience
       .map(
         (experience, index) => `
-      <div class="experience-info__item ${experience.isLast === 'true' ? 'experience-info__item_last' : ''}">
+      <div class="experience-info__item ${experience.isLast === 'true' ? 'experience-info__item_last' : ''}" data-abbr="experience-info__item" data-index="${index}">
         <div class="experience-info__item_top-block">
           <p class="ordinary-text-semibold editable" id="experience_${index}_period">${experience.period}</p>
           <div class="experience-info__item_badge ordinary-text-semibold clickable" id="experience_${index}_isLast" data-type="experience_badge" data-status="${experience.isLast}" style="${experience.isLast === 'false' ? 'display: none' : ''}">most recent</div>
@@ -369,9 +566,12 @@ function renderBlockExperience(resumePart, data) {
             <p class="ordinary-text editable" id="experience_${index}_description">${experience.description}</p>
           </div>
         </div>
-      </div>`
+        <button class="experience-info__button delete-item" id="experience_deleteButton" style="display: none">x</button>
+      </div>
+      `
       )
       .join('')}
+      <button class="experience-info__button add-item" id="experience_addButton" style="display: none">+</button>
   </div>`;
   resumePart.appendChild(blockExperience);
 }
@@ -382,11 +582,11 @@ function renderBlockEducation(resumePart, data) {
   blockEducation.className = 'resume__block resume__block_education';
   blockEducation.innerHTML = `
   <h2 class="resume__block_title">Education</h2>
-  <div class="education-info">
+  <div class="education-info" data-abbr="education-info">
     ${data.education
       .map(
         (education, index) => `
-      <div class="education-info__item ${education.isFavorite === 'true' ? 'education-info__item_favorite' : ''} ">
+      <div class="education-info__item ${education.isFavorite === 'true' ? 'education-info__item_favorite' : ''} " data-abbr="education-info__item" data-index="${index}">
         <div class="education-info__item_top">
           <p class="enlarged-text-semibold editable" id="education_${index}_period">${education.period}</p>
           <img src="${favoriteIcon}" alt="" class="favorite-icon clickable" id="education_${index}_isFavorite" data-type="education_favorite" data-status="${education.isFavorite}" style="${education.isFavorite === 'false' ? 'display: none' : ''}">
@@ -398,9 +598,11 @@ function renderBlockEducation(resumePart, data) {
           </div>
         </div>
         <p class="ordinary-text editable" id="education_${index}_institution">${education.institution}</p>
+        <button class="education_-info__button delete-item" id="education__deleteButton" style="display: none">x</button>
       </div>`
       )
       .join('')}
+    <button class="education-info__button add-item" id="education_addButton" style="display: none"}>+</button>
   </div>`;
   resumePart.prepend(blockEducation);
 }
@@ -411,15 +613,16 @@ function renderBlockInterests(resumePart, data) {
   blockInterests.className = 'resume__block resume__block_interests';
   blockInterests.innerHTML = `
   <h2 class="resume__block_title">Interests</h2>
-  <ul class="interests-info">
+  <div class="interests-info" data-abbr="interests-info">
     ${data.interests
       .map(
-        (interest, index) => `<li class="interests-info__item ordinary-text editable" id="interests_${index}">
+        (interest, index) => `<div class="interests-info__item ordinary-text editable" id="interests_${index}">
       ${interest}
-    </li>`
+    </div>`
       )
       .join('')}
-  </ul>`;
+    <button class="interests-info__button add-item" id="interests_addButton" style="display: none"}>+</button>
+  </div>`;
   resumePart.appendChild(blockInterests);
 }
 
