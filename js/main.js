@@ -3,6 +3,7 @@ import '../css/normalize.css';
 import favoriteIcon from '/favorite.svg';
 import myPhoto from '/my-photo.jpg';
 import { PDF } from './PDF.js';
+import { makeWaveEffect, setupWaveEffect } from './wave-effect.js';
 
 let CURRENT_RESUME = null;
 let isEditMode = false;
@@ -87,15 +88,17 @@ function setupListenerForClickable(element) {
         }
       }
 
-      element.addEventListener('click', () => {
+      element.addEventListener('click', event => {
         if (element.dataset.status === 'true') {
           element.dataset.status = 'false';
           if (element.dataset.type === 'education_favorite') {
             const parentElement = element.closest('.education-info__item');
             parentElement.classList.remove('education-info__item_favorite');
+            makeWaveEffect(parentElement, event, 'green');
           } else if (element.dataset.type === 'experience_badge') {
             const parentElement = element.closest('.experience-info__item');
             parentElement.classList.remove('experience-info__item_last');
+            makeWaveEffect(parentElement, event, 'green');
           }
           if (isEditMode) {
             element.style.opacity = '0.5';
@@ -107,9 +110,11 @@ function setupListenerForClickable(element) {
           if (element.dataset.type === 'education_favorite') {
             const parentElement = element.closest('.education-info__item');
             parentElement.classList.add('education-info__item_favorite');
+            makeWaveEffect(parentElement, event);
           } else if (element.dataset.type === 'experience_badge') {
             const parentElement = element.closest('.experience-info__item');
             parentElement.classList.add('experience-info__item_last');
+            makeWaveEffect(parentElement, event);
           }
         }
         updateResume(element, element.dataset.status);
@@ -220,7 +225,12 @@ function setupListeners() {
     });
 
     document.querySelectorAll('.resizable').forEach(element => {
-      setupListenerForResizable(element);
+      if (isEditMode) {
+        setupListenerForResizable(element);
+      } else {
+        const newElement = element.cloneNode(true);
+        element.parentNode.replaceChild(newElement, element);
+      }
     });
   });
 
@@ -667,3 +677,5 @@ function detectWay(way) {
       return '';
   }
 }
+
+setupWaveEffect();

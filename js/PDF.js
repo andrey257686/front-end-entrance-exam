@@ -5,7 +5,6 @@ export class PDF {
     this.doc = new jsPDF();
   }
   makePDF(resume, photoLink) {
-    console.log(resume.name);
     let xPos = 10;
     let yPos = 5;
     this.doc.addImage(photoLink, 'JPEG', xPos, yPos, 25, 25);

@@ -17,15 +17,6 @@
   box-sizing: border-box;
 }
 
-[contentEditable='true'] {
-  /* pointer-events: none; */
-  outline: 1px solid red;
-}
-
-.favorite-icon[data-status='false'] {
-  filter: opacity(0.5);
-}
-
 p,
 h1,
 h2,
@@ -256,6 +247,7 @@ body {
   width: 100%;
   height: 100%;
   background: var(--accent-color);
+  cursor: grab;
 }
 
 /* experience block */
@@ -285,6 +277,8 @@ body {
 }
 
 .experience-info__item {
+  position: relative;
+  overflow: hidden;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -306,6 +300,7 @@ body {
   border-radius: 60px;
   color: var(--text-badge);
   background-color: var(--background-color-badge);
+  cursor: pointer;
 }
 
 .experience-info__item_top-block {
@@ -429,11 +424,12 @@ body {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  /* justify-content: space-between; */
   gap: 10px;
 }
 
 .education-info__item {
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: start;
@@ -448,6 +444,15 @@ body {
 .education-info__item_favorite {
   background-color: var(--accent-color);
   color: var(--accent-text-color);
+}
+
+.favorite-icon[data-status='false'] {
+  /* filter: opacity(0.7); */
+  animation: shake 2.5s infinite;
+}
+
+.favorite-icon {
+  cursor: pointer;
 }
 
 .education-info__item_top {
@@ -627,17 +632,43 @@ body {
 }
 
 .control__button {
+  position: relative;
   background-color: var(--main-text);
   color: var(--accent-text-color);
-  padding: 8px 16px;
+  width: 150px;
+  height: 32px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease-out;
+  overflow: hidden;
 }
 
 .control__button:hover {
-  background-color: var(--accent-color);
+  box-shadow: var(--accent-color) 2px 2px 0px 0px;
+}
+
+.ripple-effect {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(0);
+  animation: ripple-animation 1s linear;
+}
+
+.ripple-effect-green {
+  position: absolute;
+  border-radius: 50%;
+  background: hsla(147, 70%, 50%, 0.5);
+  transform: scale(0);
+  animation: ripple-animation 1s linear;
+}
+
+@keyframes ripple-animation {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
 }
 
 .block__button {
@@ -653,4 +684,28 @@ body {
 .block__button:hover {
   background-color: var(--accent-text-color);
   color: var(--additional-text);
+}
+
+[contentEditable='true'] {
+  animation: shake 2.5s infinite;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-2px) rotate(-0.5deg);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(2px) rotate(0.5deg);
+  }
 }
