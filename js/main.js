@@ -88,6 +88,49 @@ function setupListeners() {
         element.contentEditable = false;
       }
     });
+
+    // ОТРЕФАКТОРИТЬ clickable, ПОТОМУ ЧТО ЭТО УЖАС, НО РАБОТАЕТ!
+
+    document.querySelectorAll('.clickable').forEach(element => {
+      const currentStatus = element.dataset.status;
+      if (currentStatus === 'false') {
+        if (isEditMode) {
+          element.style.display = 'block';
+          element.style.opacity = '0.5';
+        } else {
+          element.style.display = 'none';
+        }
+      }
+
+      element.addEventListener('click', () => {
+        if (element.dataset.status === 'true') {
+          element.dataset.status = 'false';
+          if (element.dataset.type === 'education_favorite') {
+            const parentElement = element.closest('.education-info__item');
+            parentElement.classList.remove('education-info__item_favorite');
+          } else if (element.dataset.type === 'experience_badge') {
+            const parentElement = element.closest('.experience-info__item');
+            parentElement.classList.remove('experience-info__item_last');
+          }
+          if (isEditMode) {
+            element.style.opacity = '0.5';
+          }
+        } else {
+          element.dataset.status = 'true';
+          element.style.opacity = '1';
+          element.style.display = 'block';
+          if (element.dataset.type === 'education_favorite') {
+            const parentElement = element.closest('.education-info__item');
+            parentElement.classList.add('education-info__item_favorite');
+          } else if (element.dataset.type === 'experience_badge') {
+            const parentElement = element.closest('.experience-info__item');
+            parentElement.classList.add('experience-info__item_last');
+          }
+        }
+        updateResume(element, element.dataset.status);
+      });
+    });
+
     document.querySelectorAll('.resizable').forEach(element => {
       const parent = element.parentElement;
       const parentWidth = parent.offsetWidth;
@@ -312,10 +355,10 @@ function renderBlockExperience(resumePart, data) {
     ${data.experience
       .map(
         (experience, index) => `
-      <div class="experience-info__item ${experience.last ? 'experience-info__item_last' : ''}">
+      <div class="experience-info__item ${experience.isLast === 'true' ? 'experience-info__item_last' : ''}">
         <div class="experience-info__item_top-block">
           <p class="ordinary-text-semibold editable" id="experience_${index}_period">${experience.period}</p>
-          ${experience.last ? '<div class="experience-info__item_badge ordinary-text-semibold">most recent</div>' : ''}
+          <div class="experience-info__item_badge ordinary-text-semibold clickable" id="experience_${index}_isLast" data-type="experience_badge" data-status="${experience.isLast}" style="${experience.isLast === 'false' ? 'display: none' : ''}">most recent</div>
         </div>
         <div class="experience-info__item_main-block">
           <div class="experience-info__item_position">
@@ -343,10 +386,10 @@ function renderBlockEducation(resumePart, data) {
     ${data.education
       .map(
         (education, index) => `
-      <div class="education-info__item ${education.isFavorite ? 'education-info__item_favorite' : ''} ">
+      <div class="education-info__item ${education.isFavorite === 'true' ? 'education-info__item_favorite' : ''} ">
         <div class="education-info__item_top">
           <p class="enlarged-text-semibold editable" id="education_${index}_period">${education.period}</p>
-          ${education.isFavorite ? `<img src="${favoriteIcon}" alt="">` : ''}
+          <img src="${favoriteIcon}" alt="" class="favorite-icon clickable" id="education_${index}_isFavorite" data-type="education_favorite" data-status="${education.isFavorite}" style="${education.isFavorite === 'false' ? 'display: none' : ''}">
         </div>
         <div class="education-info__item_main">
           <h3 class="enlarged-text-semibold editable" id="education_${index}_degree">${education.degree}</h3>

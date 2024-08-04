@@ -22,6 +22,10 @@
   border: 1px solid red;
 }
 
+.favorite-icon[data-status='false'] {
+  filter: opacity(0.5);
+}
+
 p,
 h2,
 h3,
