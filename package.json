@@ -16,5 +16,8 @@
     "eslint-plugin-prettier": "^5.2.1",
     "prettier": "^3.3.3",
     "vite": "^5.2.0"
+  },
+  "dependencies": {
+    "jspdf": "^2.5.1"
   }
 }

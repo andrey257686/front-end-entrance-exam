@@ -2,9 +2,12 @@ import '../css/style.css';
 import '../css/normalize.css';
 import favoriteIcon from '/favorite.svg';
 import myPhoto from '/my-photo.jpg';
+import { PDF } from './PDF.js';
 
 let CURRENT_RESUME = null;
 let isEditMode = false;
+
+const PDFfile = new PDF();
 
 if (!localStorage.getItem('resume')) {
   fetchAndRenderResume();
@@ -181,6 +184,9 @@ function setupListeners() {
   document.querySelectorAll('.editable').forEach(element => {
     setupListenerForEditable(element);
     element.contentEditable = false;
+  });
+  document.getElementById('download').addEventListener('click', () => {
+    PDFfile.makePDF(CURRENT_RESUME, myPhoto);
   });
   document.getElementById('edit').addEventListener('click', () => {
     isEditMode = !isEditMode;
