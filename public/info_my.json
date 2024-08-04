@@ -1,0 +1,77 @@
+{
+  "greeting": "Hello 👋🏻 I’m",
+  "name": "Andrey Ushakov",
+  "title": "Frontend Developer",
+  "languages": [
+    { "name": "Russian", "level": "Advanced" },
+    { "name": "English", "level": "Upper Intermediate" },
+    { "name": "Memes", "level": "Advanced" }
+  ],
+  "experience": [
+    {
+      "title": "Frontend Developer",
+      "company": "Freelance",
+      "period": "Aug. 2023 - Present",
+      "isLast": "true",
+      "description": "Development of business card sites. Helping students with laboratory work. Creation of responsive and adaptive web applications using HTML, CSS, and JavaScript. Developing an application using Commercetools."
+    },
+    {
+      "title": "Information Security Specialist",
+      "company": "Rostelecom",
+      "period": "2021 - Present",
+      "isLast": "false",
+      "description": "Administration of servers and network equipment. Configuration of network equipment of Cisco, Juniper, HP, Huawei. Work with key information, installation and configuration of information protection means (both hardware and software), protection of information from unauthorized access."
+    }
+  ],
+  "education": [
+    {
+      "period": "2023 - 2024",
+      "isFavorite": "true",
+      "degree": "JavaScript / Frontend Developer",
+      "tags": "#JS #TypeScript #WebDev #Vite #Webpack #SCSS #OOP #Git #Figma",
+      "institution": "The Rolling Scopes School"
+    },
+    {
+      "period": "2016 - 2021",
+      "isFavorite": "true",
+      "degree": "Information Security Specialist",
+      "tags": "#InfoSec #CyberSecurity #Cryptography #SIEM #SOC #Hack",
+      "institution": "Russian Federation Security Guard Service Federal Academy"
+    },
+    {
+      "period": "2024 - Present",
+      "isFavorite": "false",
+      "degree": "Angular Developer",
+      "tags": "#Angular #RxJS #NgRx #Observables #Forms",
+      "institution": "The Rolling Scopes School"
+    }
+  ],
+  "tools": {
+    "code": ["VSCode", "JS", "TS", "Angular", "React", "Git", "GitHub"],
+    "design": ["Figma", "Photoshop"],
+    "other": ["ChatGPT", "Trello", "Meet"]
+  },
+  "interests": [
+    "TypeScript",
+    "Frontend",
+    "Angular",
+    "React",
+    "InfoSec",
+    "Development",
+    "Technology",
+    "Networks",
+    "Linux",
+    "Cybersecurity",
+    "DevOps",
+    "UX/UI Design",
+    "CTF"
+  ],
+  "contacts": {
+    "message": "Let’s chat! I’m ready to work on exciting projects",
+    "ways": {
+      "github": "https://github.com/andrey257686",
+      "telegram": "ghosteee13",
+      "email": "ushakov.andrey257686@gmail.com"
+    }
+  }
+}

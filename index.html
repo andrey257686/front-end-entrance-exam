@@ -1,13 +1,44 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
+    <meta charset="UTF-8" >
+    <link rel="icon" type="image/svg+xml" href="/resume.svg" >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="./css/normalize.css" /> -->
+    <title>Resume</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <div class="container">
+        <div class="control__buttons">
+          <div class="control__edit">
+            <p class="ordinary-text">Edit mode</p>
+            <div class="control__checkbox_container button__edit">
+              <input type="checkbox" class="control__checkbox" id="checkbox">
+              <label class="control__switch" for="checkbox" id="edit">
+                <span class="control__slider"></span>
+              </label>
+            </div>
+          </div>
+          <!-- <button class="control__button button__edit" id="edit">Edit</button> -->
+          <button class="control__button wave-effect" id="download">Download</button>
+        </div>
+        <h1>Resume</h1>
+        <div class="resume" id ="resume">
+          <div class="resume__part resume__part_top" id="part_top">
+          </div>
+          <div class="resume__part resume__part_center" id ="part_center">
+          </div>
+          <div class="resume__part resume__part_bottom" id="part_bottom">
+            <div class="sensitive-info">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="./js/main.js"></script>
   </body>
 </html>
