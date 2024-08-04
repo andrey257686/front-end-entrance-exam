@@ -5,6 +5,7 @@ export class PDF {
     this.doc = new jsPDF();
   }
   makePDF(resume, photoLink) {
+    console.log(resume);
     let xPos = 10;
     let yPos = 5;
     this.doc.addImage(photoLink, 'JPEG', xPos, yPos, 25, 25);
@@ -79,7 +80,7 @@ export class PDF {
       this.doc.text(' - ', xPos, yPos);
       xPos += this.doc.getTextWidth(' - ');
       this.doc.text(resume.languages[i].level, xPos, yPos);
-      yPos += this.doc.getLineHeight(resume.education[i].period) / this.doc.internal.scaleFactor;
+      yPos += this.doc.getLineHeight(resume.languages[i].level) / this.doc.internal.scaleFactor;
       xPos = 10;
     }
     yPos += 5;
