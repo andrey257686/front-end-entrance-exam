@@ -13,8 +13,19 @@
   <body>
     <div id="app">
       <div class="container">
-        <button class="button" id="edit">Edit</button>
-        <button class="button" id="download">Download</button>
+        <div class="control__buttons">
+          <div class="control__edit">
+            <p class="ordinary-text">Edit mode</p>
+            <div class="control__checkbox_container button__edit">
+              <input type="checkbox" class="control__checkbox" id="checkbox">
+              <label class="control__switch" for="checkbox" id="edit">
+                <span class="control__slider"></span>
+              </label>
+            </div>
+          </div>
+          <!-- <button class="control__button button__edit" id="edit">Edit</button> -->
+          <button class="control__button" id="download">Download</button>
+        </div>
         <h1>Resume</h1>
         <div class="resume" id ="resume">
           <div class="resume__part resume__part_top" id="part_top">

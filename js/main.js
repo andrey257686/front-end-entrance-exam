@@ -283,7 +283,7 @@ function addEducationDescriptionItem(parent) {
       </div>
     </div>
     <p class="ordinary-text editable" id="education_${index}_institution" contentEditable=true>Write institution</p>
-    <button class="education_-info__button delete-item" id="education__deleteButton" style="${isEditMode ? '' : 'display: none'}">x</button>
+    <button class="education_-info__button delete-item block__button" id="education__deleteButton" style="${isEditMode ? '' : 'display: none'}">x</button>
   `;
   CURRENT_RESUME.education.push({
     period: newItem.querySelector('#education_' + index + '_period').innerText,
@@ -318,7 +318,7 @@ function addExperienceDescriptionItem(parent) {
       <p class="ordinary-text editable" id="experience_${index}_description" contentEditable=true>Write description</p>
     </div>
   </div>
-  <button class="experience-info__button delete-item" id="experience_deleteButton" style="${isEditMode ? '' : 'display: none'}">x</button>`;
+  <button class="experience-info__button delete-item block__button" id="experience_deleteButton" style="${isEditMode ? '' : 'display: none'}">x</button>`;
   CURRENT_RESUME.experience.push({
     period: newItem.querySelector('#experience_' + index + '_period').innerText,
     title: newItem.querySelector('#experience_' + index + '_title').innerText,
@@ -345,7 +345,7 @@ function addLanguageDescriptionItem(parent) {
           <div class="languages-info__item_progress resizable" id="languages_${index}_level" style="width: 10%"></div>
         </div>
       </div>
-      <button class="languages-info__button delete-item" id="languages_deleteButton" style="${isEditMode ? '' : 'display: none'}">x</button>
+      <button class="languages-info__button delete-item block__button" id="languages_deleteButton" style="${isEditMode ? '' : 'display: none'}">x</button>
   `;
   CURRENT_RESUME.languages.push({
     name: newItem.querySelector('#languages_' + index + '_name').innerText,
@@ -505,11 +505,11 @@ function renderBlockLanguages(resumePart, data) {
                 <div class="languages-info__item_progress resizable" id="languages_${index}_level" style="width: ${detectLanguageLevelByString(language.level)}%"></div>
               </div>
             </div>
-            <button class="languages-info__button delete-item" id="languages_deleteButton" style="display: none">x</button>
+            <button class="languages-info__button delete-item block__button" id="languages_deleteButton" style="display: none">x</button>
           </div>`
           )
           .join('')}
-        <button class="languages-info__button add-item" id="languages_addButton" style="display: none">+</button>
+        <button class="languages-info__button add-item block__button" id="languages_addButton" style="display: none">+</button>
       </div>
     </div>`;
   resumePart.appendChild(blockLanguages);
@@ -572,12 +572,12 @@ function renderBlockExperience(resumePart, data) {
             <p class="ordinary-text editable" id="experience_${index}_description">${experience.description}</p>
           </div>
         </div>
-        <button class="experience-info__button delete-item" id="experience_deleteButton" style="display: none">x</button>
+        <button class="experience-info__button delete-item block__button" id="experience_deleteButton" style="display: none">x</button>
       </div>
       `
       )
       .join('')}
-      <button class="experience-info__button add-item" id="experience_addButton" style="display: none">+</button>
+      <button class="experience-info__button add-item block__button" id="experience_addButton" style="display: none">+</button>
   </div>`;
   resumePart.appendChild(blockExperience);
 }
@@ -604,11 +604,11 @@ function renderBlockEducation(resumePart, data) {
           </div>
         </div>
         <p class="ordinary-text editable" id="education_${index}_institution">${education.institution}</p>
-        <button class="education_-info__button delete-item" id="education__deleteButton" style="display: none">x</button>
+        <button class="education_-info__button delete-item block__button" id="education__deleteButton" style="display: none">x</button>
       </div>`
       )
       .join('')}
-    <button class="education-info__button add-item" id="education_addButton" style="display: none"}>+</button>
+    <button class="education-info__button add-item block__button" id="education_addButton" style="display: none"}>+</button>
   </div>`;
   resumePart.prepend(blockEducation);
 }
@@ -627,7 +627,7 @@ function renderBlockInterests(resumePart, data) {
     </div>`
       )
       .join('')}
-    <button class="interests-info__button add-item" id="interests_addButton" style="display: none"}>+</button>
+    <button class="interests-info__button add-item block__button" id="interests_addButton" style="display: none"}>+</button>
   </div>`;
   resumePart.appendChild(blockInterests);
 }
